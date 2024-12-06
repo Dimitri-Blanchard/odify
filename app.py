@@ -5,21 +5,13 @@ from flask_cors import CORS
 import yt_dlp
 from dotenv import load_dotenv
 
-# Charger les variables d'environnement depuis le fichier .env
+# Charger les variables d'environnement depuis le fichier .env (si nécessaire)
 load_dotenv()
 
 app = Flask(__name__)
 
 # Autoriser les requêtes CORS de n'importe quelle origine
 CORS(app, resources={r"/*": {"origins": "*"}})
-
-# Charger les cookies depuis les variables d'environnement
-cookie_data = os.getenv("YOUTUBE_COOKIES")
-if cookie_data:
-    cookies = json.loads(cookie_data)  # Convertir les cookies de JSON en dictionnaire
-else:
-    cookies = None
-    print("Aucun cookie trouvé dans les variables d'environnement")
 
 @app.route("/")
 def home():
@@ -28,7 +20,7 @@ def home():
 @app.route("/download", methods=["POST"])
 def download_song():
     data = request.json
-    song_name = data.get("song_name")
+    song_name = data.get("song_name")  # Utiliser le nom de la chanson au lieu de l'URL
 
     if not song_name:
         return jsonify({"error": "No song name provided"}), 400
@@ -39,15 +31,16 @@ def download_song():
             'format': 'bestaudio/best',
             'outtmpl': 'static/%(title)s.%(ext)s',
             'quiet': True,
-            'cookies': cookies  # Utiliser les cookies récupérés depuis les variables d'environnement
         }
 
+        # Recherche de la chanson via yt-dlp en utilisant le nom
+        search_query = f"ytsearch:{song_name}"  # Recherche de la chanson par son nom
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             # Recherche et téléchargement de la chanson
-            info_dict = ydl.extract_info(f"ytsearch:{song_name}", download=True)
+            info_dict = ydl.extract_info(search_query, download=True)
             file_name = f"{info_dict['entries'][0]['title']}.{info_dict['entries'][0]['ext']}"
 
-        return jsonify({"success": True, "message": f"{song_name} downloaded!", "file_name": file_name})
+        return jsonify({"success": True, "message": f"Downloaded: {file_name}", "file_name": file_name})
 
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
