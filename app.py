@@ -25,6 +25,7 @@ def download_song():
             'format': 'bestaudio/best',
             'outtmpl': 'static/%(title)s.%(ext)s',
             'quiet': True,
+            'cookiesfrombrowser': ('chrome',),  # Remplacez 'chrome' par 'firefox' ou 'edge' selon votre navigateur
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
