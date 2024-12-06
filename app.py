@@ -15,7 +15,7 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/")
 def home():
-    return "Music Downloader Backend is Running"
+    return "Dimitri Blanchard API is A Genius"
 
 @app.route("/download", methods=["POST"])
 def download_song():
