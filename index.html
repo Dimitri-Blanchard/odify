@@ -62,15 +62,15 @@
 <body>
     <div id="banner">Music Downloader</div>
     <h1>Download Your Favorite Music</h1>
-    <input type="text" id="songInput" placeholder="Enter song name">
-    <button id="searchPlay">Search & Play</button>
+    <input type="text" id="songNameInput" placeholder="Enter song name (e.g., Shape of You)">
+    <button id="searchPlay">Search & Download</button>
     <div id="status">Status will appear here...</div>
     <audio id="audioPlayer" controls></audio>
     <script>
-        const backendUrl = "https://odifybackend.onrender.com/"; // Replace with your backend URL
+        const backendUrl = "http://127.0.0.1:5000";  // Replace with your backend URL if deployed
 
         document.getElementById("searchPlay").addEventListener("click", async () => {
-            const songName = document.getElementById("songInput").value.trim();
+            const songName = document.getElementById("songNameInput").value.trim();
             const status = document.getElementById("status");
             const audioPlayer = document.getElementById("audioPlayer");
 
@@ -91,7 +91,7 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    status.textContent = `Downloaded: "${songName}" successfully! Playing...`;
+                    status.textContent = `Downloaded: "${data.file_name}" successfully! Playing...`;
                     audioPlayer.src = `${backendUrl}/static/${data.file_name}`;
                     audioPlayer.style.display = "block";
                     audioPlayer.play();
