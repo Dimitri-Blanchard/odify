@@ -1,7 +1,7 @@
 const downloadBtn = document.getElementById('downloadBtn');
 const songInput = document.getElementById('songInput');
 const responseMessage = document.getElementById('responseMessage');
-const API_URL = "http://127.0.0.1:5000/download";
+const API_URL = "https://odifybackend.onrender.com/download";
 
 // Utility function to update response message
 const updateResponseMessage = (message, color) => {
