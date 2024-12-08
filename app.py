@@ -8,16 +8,13 @@ app = Flask(__name__)
 
 CORS(app)
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Global yt_dlp options for reuse
 ydl_opts = {
-    'format': 'bestaudio/best',  # Choisit le meilleur format audio disponible
-    'quiet': True,  # Désactive les logs détaillés
-    'noplaylist': True,  # Ne télécharge pas les playlists, seulement la première vidéo
-    'outtmpl': '%(id)s.%(ext)s',  # Modifie le nom du fichier de sortie en fonction de l'ID de la vidéo
-    'restrictfilenames': True  # Limite les noms de fichiers pour éviter les problèmes
+    'format': 'bestaudio/best',
+    'noplaylist': True,
+    'outtmpl': '%(id)s.%(ext)s',
+    'restrictfilenames': True
 }
 
 def get_youtube_download_url(song_name: str):
@@ -51,7 +48,7 @@ def download_song():
         app.logger.error("No song name provided.")
         return jsonify({"error": "No song name provided"}), 400
 
-    if len(song_name) > 200:  # Example of input validation
+    if len(song_name) > 200:
         app.logger.error(f"Song name is too long: {len(song_name)} characters.")
         return jsonify({"error": "Song name is too long. Please limit it to 200 characters."}), 400
 
@@ -72,5 +69,5 @@ def download_song():
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
-    # If in production, set debug to False
-    app.run(debug=os.environ.get("FLASK_ENV") == "development")
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=os.environ.get("FLASK_ENV") == "development")
