@@ -3,106 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Downloader</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        #banner {
-            width: 100%;
-            background-color: #1db954;
-            padding: 15px 0;
-            color: #ffffff;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h1 {
-            font-size: 3rem;
-            color: #1db954;
-            margin-bottom: 20px;
-        }
-        input, button {
-            margin: 10px;
-            padding: 10px 20px;
-            border-radius: 25px;
-            border: none;
-            font-size: 1rem;
-        }
-        button {
-            background-color: #1db954;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #1aa34a;
-        }
-        #status {
-            margin-top: 20px;
-            font-size: 1.2rem;
-        }
-        #audioPlayer {
-            display: none;
-            margin-top: 20px;
-            width: 80%;
-        }
-    </style>
+    <title>Song Downloader</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="banner">Music Downloader</div>
-    <h1>Download Your Favorite Music</h1>
-    <input type="text" id="songNameInput" placeholder="Enter song name (e.g., Shape of You)">
-    <button id="searchPlay">Search & Download</button>
-    <div id="status">Status will appear here...</div>
-    <audio id="audioPlayer" controls></audio>
-    <script>
-        const backendUrl = "https://odifybackend.onrender.com";  // Replace with your backend URL if deployed
+    <div class="container">
+        <header>
+            <h1>🎧 Song Downloader 🎶</h1>
+            <p class="tagline">Find, download and enjoy your favorite songs!</p>
+        </header>
 
-        document.getElementById("searchPlay").addEventListener("click", async () => {
-            const songName = document.getElementById("songNameInput").value.trim();
-            const status = document.getElementById("status");
-            const audioPlayer = document.getElementById("audioPlayer");
+        <section class="search-section">
+            <input type="text" id="songInput" placeholder="Enter song name..." />
+            <button id="downloadBtn">
+                <span class="btn-text">Download & Play</span>
+                <span class="icon">&#9654;</span>
+            </button>
+        </section>
 
-            if (!songName) {
-                status.textContent = "Please enter a song name.";
-                return;
-            }
+        <section class="response-section">
+            <p id="responseMessage">Enter a song name to start.</p>
+        </section>
 
-            status.textContent = `Searching for "${songName}"...`;
+        <footer>
+            <p>&copy; 2024 Song Downloader. All rights reserved.</p>
+        </footer>
+    </div>
 
-            try {
-                const response = await fetch(`${backendUrl}/download`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ song_name: songName }),
-                });
-
-                const data = await response.json();
-
-                if (data.success) {
-                    status.textContent = `Downloaded: "${data.file_name}" successfully! Playing...`;
-                    audioPlayer.src = `${backendUrl}/static/${data.file_name}`;
-                    audioPlayer.style.display = "block";
-                    audioPlayer.play();
-                } else {
-                    status.textContent = `Error: ${data.error}`;
-                }
-            } catch (error) {
-                console.error(error);
-                status.textContent = "Error connecting to the server.";
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
