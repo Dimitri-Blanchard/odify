@@ -13,11 +13,11 @@ logging.basicConfig(level=logging.INFO)
 
 # Global yt_dlp options for reuse
 ydl_opts = {
-    'format': 'bestaudio/best',
-    'quiet': True,
-    'noplaylist': True,
-    'outtmpl': '%(id)s.%(ext)s',
-    'restrictfilenames': True
+    'format': 'bestaudio/best',  # Choisit le meilleur format audio disponible
+    'quiet': True,  # Désactive les logs détaillés
+    'noplaylist': True,  # Ne télécharge pas les playlists, seulement la première vidéo
+    'outtmpl': '%(id)s.%(ext)s',  # Modifie le nom du fichier de sortie en fonction de l'ID de la vidéo
+    'restrictfilenames': True  # Limite les noms de fichiers pour éviter les problèmes
 }
 
 def get_youtube_download_url(song_name: str):
@@ -25,10 +25,11 @@ def get_youtube_download_url(song_name: str):
     Helper function to extract download URL from YouTube search.
     """
     try:
+        # Utilise yt-dlp pour rechercher la chanson par nom sur YouTube
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(f"ytsearch:{song_name}", download=False)
             video_info = info_dict['entries'][0]
-            file_url = video_info.get('url')
+            file_url = video_info.get('url')  # URL du flux audio de la vidéo
             return file_url, video_info
     except Exception as e:
         logging.error(f"Error fetching song details: {str(e)}")
@@ -63,5 +64,5 @@ def download_song():
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
-    # Run the application on the public IP 0.0.0.0 with the correct port (e.g., 5000 or 80)
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=os.environ.get("FLASK_ENV") == "development")
+    # If in production, set debug to False
+    app.run(debug=os.environ.get("FLASK_ENV") == "development")
