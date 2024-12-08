@@ -2,3 +2,4 @@ python-dotenv
 Flask
 flask-cors
 yt-dlp
+gunicorn
