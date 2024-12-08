@@ -25,14 +25,18 @@ def get_youtube_download_url(song_name: str):
     Helper function to extract download URL from YouTube search.
     """
     try:
-        # Utilise yt-dlp pour rechercher la chanson par nom sur YouTube
+        app.logger.info(f"Searching for song: {song_name}")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info_dict = ydl.extract_info(f"ytsearch:{song_name}", download=False)
             video_info = info_dict['entries'][0]
-            file_url = video_info.get('url')  # URL du flux audio de la vidéo
+            file_url = video_info.get('url')
+            app.logger.info(f"Song found: {video_info.get('title')}, URL: {file_url}")
             return file_url, video_info
+    except yt_dlp.utils.DownloadError as e:
+        app.logger.error(f"yt-dlp error: {str(e)}")
+        raise Exception("Error fetching song details from YouTube.")
     except Exception as e:
-        logging.error(f"Error fetching song details: {str(e)}")
+        app.logger.error(f"General error fetching song details: {str(e)}")
         raise Exception("Error fetching song details from YouTube.")
 
 @app.route("/download", methods=["POST"])
