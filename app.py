@@ -44,14 +44,18 @@ def download_song():
     song_name = data.get("song_name")
 
     if not song_name:
+        app.logger.error("No song name provided.")
         return jsonify({"error": "No song name provided"}), 400
 
     if len(song_name) > 200:  # Example of input validation
+        app.logger.error(f"Song name is too long: {len(song_name)} characters.")
         return jsonify({"error": "Song name is too long. Please limit it to 200 characters."}), 400
 
     try:
+        app.logger.info(f"Fetching song details for: {song_name}")
         file_url, video_info = get_youtube_download_url(song_name)
 
+        app.logger.info(f"Song details fetched successfully: {video_info.get('title')}")
         return jsonify({
             "success": True,
             "download_url": file_url,
@@ -60,7 +64,7 @@ def download_song():
         })
 
     except Exception as e:
-        # Provide a user-friendly error message
+        app.logger.error(f"Error occurred: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
