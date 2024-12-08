@@ -63,5 +63,5 @@ def download_song():
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == "__main__":
-    # If in production, set debug to False
-    app.run(debug=os.environ.get("FLASK_ENV") == "development")
+    # Run the application on the public IP 0.0.0.0 with the correct port (e.g., 5000 or 80)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=os.environ.get("FLASK_ENV") == "development")
